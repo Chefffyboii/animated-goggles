@@ -3,14 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Spider Solitaire</title>
+    <title>Spider Solitaire Variation</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div id="game-container">
-        <div id="columns"></div>
-        <div id="move-counter">Moves: 0</div>
+        <div id="top-bar">
+            <button id="new-game">New Game</button>
+            <button id="undo">Undo</button>
+            <button id="redo">Redo</button>
+            <div id="timer">00:00</div>
+        </div>
+        <div id="tableau"></div>
+        <div id="foundations"></div>
+        <div id="rules-button">Rules</div>
+        <div id="rules-modal" class="hidden">
+            <div class="modal-content">
+                <span id="close-rules">&times;</span>
+                <h2>Rules</h2>
+                <p>Your complete rules here...</p>
+            </div>
+        </div>
     </div>
     <script src="script.js"></script>
 </body>
-</html>
+</html>    
