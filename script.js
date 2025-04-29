@@ -17,21 +17,29 @@ const columns = [
 ];
 
 // Create the card element
-function createCardElement(card) {
+function createCardElement({ value, suit }) {
     const cardElement = document.createElement('div');
     cardElement.classList.add('card');
-    cardElement.textContent = card.value; // Show card value
+    cardElement.textContent = `${value}`; // Show card value
     cardElement.setAttribute('draggable', true);
-    cardElement.style.backgroundColor = card.suit === 'hearts' ? 'red' : 'black'; // Simple color distinction
+    cardElement.setAttribute('role', 'button'); // ARIA role
+    cardElement.setAttribute('tabindex', '0'); // For keyboard focus
+    cardElement.style.backgroundColor = suit === 'hearts' ? 'red' : 'black'; // Simple color distinction
+
+    // Optional: Handle keyboard drag-and-drop
+    cardElement.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter') {
+            // Trigger drag-start logic
+        }
+    });
+
     return cardElement;
 }
 
 // Function to make cards draggable
 function makeCardDraggable(cardElement, card, columnIndex) {
     cardElement.setAttribute('draggable', true);
-    cardElement.addEventListener('dragstart', (event) => {
-        event.dataTransfer.setData('text/plain', JSON.stringify({ card, columnIndex }));
-    });
+    cardElement.addEventListener('dragstart', (event) => handleDragStart(event, card, columnIndex));
 }
 
 // Function to handle the drop event on a column
@@ -40,22 +48,34 @@ function handleDrop(event, targetColumnIndex) {
     const data = event.dataTransfer.getData('text/plain');
     const { card, columnIndex } = JSON.parse(data);
 
-    // Ensure that cards can only be placed in valid positions.
-    moveCard(card, columnIndex, targetColumnIndex);
-    incrementMoves();
+    try {
+        // Ensure that cards can only be placed in valid positions.
+        moveCard(card, columnIndex, targetColumnIndex);
+        incrementMoves();
+    } catch (error) {
+        console.error("Error during card move:", error.message);
+    }
 }
 
 // Function to actually move the card between columns
 function moveCard(card, fromColumnIndex, toColumnIndex) {
-    const fromColumn = columns[fromColumnIndex];
-    const toColumn = columns[toColumnIndex];
-    const cardIndex = fromColumn.indexOf(card);
+    try {
+        const fromColumn = columns[fromColumnIndex];
+        const toColumn = columns[toColumnIndex];
+        const cardIndex = fromColumn.indexOf(card);
 
-    // Remove the card from the original column and add it to the new column
-    fromColumn.splice(cardIndex, 1);
-    toColumn.push(card);
+        if (cardIndex === -1) {
+            throw new Error("Card not found in the source column.");
+        }
 
-    renderColumns();  // Re-render the columns after the move
+        // Remove the card from the original column and add it to the new column
+        fromColumn.splice(cardIndex, 1);
+        toColumn.push(card);
+
+        renderColumns();  // Re-render the columns after the move
+    } catch (error) {
+        console.error("Error while moving the card:", error.message);
+    }
 }
 
 // Render columns with cards
@@ -80,19 +100,28 @@ function renderColumns() {
 
 // Allow column to accept drops
 function makeColumnDroppable(columnElement, columnIndex) {
-    columnElement.addEventListener('dragover', (event) => {
-        event.preventDefault();
-        columnElement.classList.add('dragging-over');
-    });
+    columnElement.addEventListener('dragover', handleDragOver);
+    columnElement.addEventListener('dragleave', handleDragLeave);
+    columnElement.addEventListener('drop', (event) => handleDropEvent(event, columnIndex));
+}
 
-    columnElement.addEventListener('dragleave', () => {
-        columnElement.classList.remove('dragging-over');
-    });
+// Drag-and-drop handlers
+function handleDragStart(event, card, columnIndex) {
+    event.dataTransfer.setData('text/plain', JSON.stringify({ card, columnIndex }));
+}
 
-    columnElement.addEventListener('drop', (event) => {
-        columnElement.classList.remove('dragging-over');
-        handleDrop(event, columnIndex);
-    });
+function handleDragOver(event) {
+    event.preventDefault();
+    event.currentTarget.classList.add('dragging-over');
+}
+
+function handleDragLeave(event) {
+    event.currentTarget.classList.remove('dragging-over');
+}
+
+function handleDropEvent(event, columnIndex) {
+    event.currentTarget.classList.remove('dragging-over');
+    handleDrop(event, columnIndex);
 }
 
 // Initial call to render columns when the game starts
