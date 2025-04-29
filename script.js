@@ -227,4 +227,35 @@ function checkVictory() {
 }
 
 // Start the game on page load
-newGame();
+document.addEventListener('DOMContentLoaded', () => {
+    newGame();
+});
+function renderTableau() {
+    const tableauDiv = document.getElementById('tableau');
+    if (!tableauDiv) {
+        console.error('Element with id "tableau" not found in the DOM');
+        return; // Exit the function if the element is missing
+    }
+    tableauDiv.innerHTML = ''; // clear current tableau
+
+    // Rest of your rendering logic
+    tableau.forEach((column, colIndex) => {
+        column.forEach((card, index) => {
+            const cardDiv = document.createElement('div');
+            cardDiv.className = 'card';
+            cardDiv.dataset.value = card.value;
+            cardDiv.dataset.suit = card.suit;
+            cardDiv.draggable = true;
+
+            if (index !== column.length - 1) {
+                cardDiv.style.background = 'lightcoral';
+                cardDiv.style.opacity = '0.5';
+            } else {
+                cardDiv.style.background = 'white';
+            }
+
+            tableauDiv.appendChild(cardDiv);
+        });
+    });
+    renderFoundations();
+}
