@@ -1,12 +1,20 @@
+// Define move counter globally
+let moves = 0;
+const moveCounter = document.getElementById('move-counter');
+
+// Function to increment the move counter
+export function incrementMoves() {
+    moves++;
+    moveCounter.textContent = `Moves: ${moves}`;
+}
+
+// Game columns
 const columns = [
     [{ value: 2, suit: 'hearts' }, { value: 3, suit: 'hearts' }, { value: 4, suit: 'hearts' }],
     [{ value: 5, suit: 'hearts' }, { value: 6, suit: 'hearts' }],
     [{ value: 7, suit: 'hearts' }, { value: 8, suit: 'hearts' }],
     [{ value: 9, suit: 'hearts' }, { value: 10, suit: 'hearts' }],
 ];
-
-let moves = 0;
-const moveCounter = document.getElementById('move-counter');
 
 // Create the card element
 function createCardElement(card) {
@@ -48,12 +56,6 @@ function moveCard(card, fromColumnIndex, toColumnIndex) {
     toColumn.push(card);
 
     renderColumns();  // Re-render the columns after the move
-}
-
-// Increment move counter
-function incrementMoves() {
-    moves++;
-    moveCounter.textContent = `Moves: ${moves}`;
 }
 
 // Render columns with cards
