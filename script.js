@@ -1,4 +1,4 @@
-let columns = [
+const columns = [
     [{ value: 2, suit: 'hearts' }, { value: 3, suit: 'hearts' }, { value: 4, suit: 'hearts' }],
     [{ value: 5, suit: 'hearts' }, { value: 6, suit: 'hearts' }],
     [{ value: 7, suit: 'hearts' }, { value: 8, suit: 'hearts' }],
@@ -32,11 +32,9 @@ function handleDrop(event, targetColumnIndex) {
     const data = event.dataTransfer.getData('text/plain');
     const { card, columnIndex } = JSON.parse(data);
 
-    // Check if the move is valid (we'll just allow it for now)
-    if (true) {
-        moveCard(card, columnIndex, targetColumnIndex);
-        incrementMoves();
-    }
+    // Ensure that cards can only be placed in valid positions.
+    moveCard(card, columnIndex, targetColumnIndex);
+    incrementMoves();
 }
 
 // Function to actually move the card between columns
