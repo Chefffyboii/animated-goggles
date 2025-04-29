@@ -1,53 +1,86 @@
 body {
+    background-color: green;
     font-family: Arial, sans-serif;
-    background-color: #2c3e50;
-    color: white;
-    text-align: center;
+    margin: 0;
+    padding: 0;
+}
+
+#top-bar {
+    background-color: gray;
+    padding: 10px;
 }
 
 #game-container {
     display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-top: 50px;
+    flex-direction: column;
 }
 
-#columns {
-    display: flex;
-    flex-wrap: wrap;
-}
-
-.column {
-    border: 1px solid #fff;
-    padding: 10px;
-    margin: 0 10px;
-    min-height: 100px;
-    width: 60px;
-    position: relative;
-}
-
-.column.dragging-over {
-    background-color: rgba(255, 255, 255, 0.1);
+#tableau {
+    display: grid;
+    grid-template-columns: repeat(15, 1fr);
+    gap: 10px;
+    margin: 20px 10px;
 }
 
 .card {
-    background-color: #3498db;
-    color: white;
     width: 60px;
     height: 90px;
-    border-radius: 10px;
-    margin-bottom: 5px;
+    background: lightcoral; /* Back of the card */
+    position: relative;
+    border-radius: 5px;
     cursor: grab;
-    text-align: center;
-    font-size: 20px;
-    line-height: 90px;
 }
 
-.card.dragging {
-    opacity: 0.5;
+.card:before {
+    content: attr(data-value);
+    position: absolute;
+    left: 5px;
+    top: 5px;
+    font-size: 12px;
 }
 
-#move-counter {
-    margin-top: 20px;
-    font-size: 18px;
+.card:after {
+    content: attr(data-suit);
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    font-size: 12px;
+}
+
+#foundations {
+    display: flex;
+    justify-content: space-around;
+    margin: 20px 10px;
+}
+
+.foundation {
+    width: 65px;
+    height: 90px;
+    border: 2px solid white;
+    background: lightgray;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.rules-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    display: none;
+    justify-content: center;
+    align-items: center;
+}
+
+.rules-modal .modal-content {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.hidden {
+    display: none;
 }
